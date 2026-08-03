@@ -1,0 +1,25 @@
+{
+  "name": "Alan's Toolkit",
+  "short_name": "Alan's Toolkit",
+  "description": "Super Tall business calculators, the Pro AV Toolkit, and a few equally strong extras.",
+  "start_url": "./toolkit.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f5f9",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "toolkit-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "toolkit-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
