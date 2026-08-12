@@ -103,6 +103,26 @@
   table.ref-table{ width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:8px; }
   table.ref-table th, table.ref-table td{ text-align:left; padding:5px 8px; border-bottom:1px solid var(--border); }
   table.ref-table th{ color:var(--text-muted); font-weight:700; font-size:0.7rem; text-transform:uppercase; }
+
+  .favorites-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; align-items:start; }
+  @media (max-width: 780px){ .favorites-grid{ grid-template-columns: 1fr; } }
+
+  .wm-columns{ display:grid; grid-template-columns: repeat(3,1fr); gap:12px; }
+  @media (max-width: 780px){ .wm-columns{ grid-template-columns: 1fr; } }
+  .wm-col{ background:#fbfbfd; border:1px solid var(--border); border-radius:12px; padding:12px; }
+  .wm-mfr-name{ font-size:0.8rem; font-weight:700; margin-bottom:8px; }
+  .wm-col select{ margin-bottom:8px; }
+  .wm-bands{ display:flex; flex-direction:column; gap:6px; }
+  .wm-chip{ display:flex; justify-content:space-between; align-items:center; gap:8px; width:100%; text-align:left;
+    font-family:inherit; font-size:0.78rem; font-weight:600; padding:7px 10px; border-radius:8px;
+    border:1px solid var(--border); background:#fff; color:var(--text); cursor:pointer; }
+  .wm-chip .range{ font-weight:700; color:var(--text-muted); font-size:0.72rem; }
+  .wm-chip.selected{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .wm-chip.selected .range{ color:#e5e4ff; }
+  .wm-chip.overlap{ background:#e8f7ee; border-color:#3fb673; color:#1d7a4c; }
+  .wm-chip.overlap .range{ color:#1d7a4c; }
+  .wm-chip.near{ background:#fff3e0; border-color:#f0ad4e; color:#9a6317; }
+  .wm-chip.near .range{ color:#9a6317; }
 </style>
 </head>
 <body>
@@ -814,6 +834,27 @@ CALCS.grossProfit = {
   }
 };
 
+/* ---------- FAVORITES: consolidated quick-access page ---------- */
+CALCS.favorites = {
+  name: "Favorites",
+  render: () => `
+    <div class="favorites-grid">
+      ${CALCS.salesTaxAdjustment.render()}
+      ${CALCS.discountPercentage.render()}
+      ${CALCS.reverseMIM.render().replace(/<hr class="divider">/g, "")}
+      ${CALCS.discountAllocator.render()}
+      ${CALCS.grossProfit.render()}
+    </div>
+  `,
+  init: () => {
+    CALCS.salesTaxAdjustment.init();
+    CALCS.discountPercentage.init();
+    CALCS.reverseMIM.init();
+    CALCS.discountAllocator.init();
+    CALCS.grossProfit.init();
+  }
+};
+
 CALCS.financingPayment = {
   name: "Financing Payment",
   render: () => `
@@ -890,6 +931,23 @@ CALCS.sixMonthPayment = {
       setText("smp_min", money(amount*0.035));
       setText("smp_payoff", money(amount/6));
     });
+  }
+};
+
+/* ---------- FINANCING: consolidated payment plans page ---------- */
+CALCS.financing = {
+  name: "Financing",
+  render: () => `
+    ${CALCS.financingPayment.render()}
+    <hr class="divider">
+    ${CALCS.threeEqualPayments.render()}
+    <hr class="divider">
+    ${CALCS.sixMonthPayment.render()}
+  `,
+  init: () => {
+    CALCS.financingPayment.init();
+    CALCS.threeEqualPayments.init();
+    CALCS.sixMonthPayment.init();
   }
 };
 
@@ -1199,11 +1257,276 @@ CALCS.lightingCheatsheet = {
   }
 };
 
+/* ---------- PRO AV: Wireless Mics ---------- */
+const WM_MANUFACTURERS = ["Sennheiser","Shure","Audio-Technica"];
+const WM_WIRELESS = {
+  "Sennheiser": {
+    "EW": [["A1","470-516"],["A","516-558"],["AW+","566-608"],["GW1","558-608"]],
+    "EW-D": [["Q1-Q6","470-526"],["R1-R6","520-576"],["R4-R9","552-608"]],
+    "XSW A": [["A","548-572"]],
+    "EW-DX": [["R1-9","520-607"],["Q1-9","470-550"]]
+  },
+  "Shure": {
+    "BLX": [["H9","512-542"],["H10","542-572"],["H11","572-596"],["J11","596-608 + 614-616"],["J13","566-589"]],
+    "SLX-D": [["G58","470-514"],["H55","514-558"],["J52","558-602 + 614-616"]],
+    "QLX-D": [["V50","174-216"],["G50","470-534"],["H50","534-598"],["J50A","572-608 + 614-616"]],
+    "ULX-D": [["V50","174-216"],["G50","470-534"],["H50","534-598"],["J50A","572-608 + 614-616"],["G57","470-608"]]
+  },
+  "Audio-Technica": {
+    "ATW-200": [["I","487-506"],["S","508-526"]],
+    "ATW-3000": [["DE2","470-530"],["EE1","530-590"]]
+  }
+};
+const WM_IEM = {
+  "Sennheiser": {
+    "XSW IEM": [["A","476-500"],["B","572-596"]],
+    "EW IEM": [["A1","470-516"],["A","516-558"],["G","566-608"]],
+    "SR 2050": [["AW+","470-558"],["GW1","558-626"]]
+  },
+  "Shure": {
+    "PSM300": [["G20","488-512"],["H20","518-542"],["J3","566-590"]],
+    "PSM900": [["G6","470-506"],["G7","506-542"],["H21","542-578"]],
+    "PSM1000": [["G10","470-542"],["J8A","554-608, 608-616"]]
+  },
+  "Audio-Technica": {
+    "ATW-3000": [["Full range","470-607"]]
+  }
+};
+function wmParseRange(str){
+  const nums = (str.match(/\d+(\.\d+)?/g)||[]).map(Number);
+  if(nums.length===0) return null;
+  return { min: Math.min(...nums), max: Math.max(...nums) };
+}
+CALCS.wirelessMics = {
+  name: "Wireless Mics",
+  render: () => `
+    <div class="calc-card">
+      <h2>Wireless Mics</h2>
+      <p class="desc">Pick a frequency band from any manufacturer's product line to highlight the closest matching bands from the others. Overlapping ranges highlight first; if nothing overlaps, the nearest band by midpoint highlights instead.</p>
+      <div class="pill-tabs" id="wm_cat_tabs"></div>
+      <div id="wm_body"></div>
+    </div>
+  `,
+  init: () => {
+    const CATS = {
+      wirelessMics: { label: "Wireless Mics", data: WM_WIRELESS },
+      iem: { label: "In Ear Monitors", data: WM_IEM }
+    };
+    const catIds = Object.keys(CATS);
+    let activeCat = catIds[0];
+    const state = {};
+    catIds.forEach(id => {
+      const data = CATS[id].data;
+      const selectedLine = {};
+      WM_MANUFACTURERS.forEach(m => { if(data[m]) selectedLine[m] = Object.keys(data[m])[0]; });
+      state[id] = { selectedLine, selectedBand: null };
+    });
+
+    const tabsEl = document.getElementById("wm_cat_tabs");
+    const bodyEl = document.getElementById("wm_body");
+
+    function renderTabs(){
+      tabsEl.innerHTML = catIds.map(id => `<button data-id="${id}" class="${id===activeCat?'active':''}">${CATS[id].label}</button>`).join("");
+      tabsEl.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => { activeCat = btn.dataset.id; renderBody(); });
+      });
+    }
+
+    function renderColumn(m, data){
+      const lines = Object.keys(data[m]);
+      return `<div class="wm-col">
+        <div class="wm-mfr-name">${m}</div>
+        <select data-mfr="${m}">${lines.map(l => `<option value="${l}">${l}</option>`).join("")}</select>
+        <div class="wm-bands" data-mfr="${m}"></div>
+      </div>`;
+    }
+
+    function renderBody(){
+      renderTabs();
+      const data = CATS[activeCat].data;
+      const mfrs = WM_MANUFACTURERS.filter(m => data[m]);
+      bodyEl.innerHTML = `<div class="wm-columns">${mfrs.map(m => renderColumn(m, data)).join("")}</div>`;
+      mfrs.forEach(m => {
+        const sel = bodyEl.querySelector(`select[data-mfr="${m}"]`);
+        sel.value = state[activeCat].selectedLine[m];
+        sel.addEventListener("change", () => {
+          const st = state[activeCat];
+          st.selectedLine[m] = sel.value;
+          if(st.selectedBand && st.selectedBand.mfr === m) st.selectedBand = null;
+          renderBands();
+        });
+      });
+      renderBands();
+    }
+
+    function renderBands(){
+      const st = state[activeCat];
+      const data = CATS[activeCat].data;
+      const mfrs = WM_MANUFACTURERS.filter(m => data[m]);
+      let selRange = null, selMfr = null;
+      if(st.selectedBand){
+        selMfr = st.selectedBand.mfr;
+        const bands = data[selMfr][st.selectedBand.line];
+        selRange = wmParseRange(bands[st.selectedBand.idx][1]);
+      }
+      mfrs.forEach(m => {
+        const line = st.selectedLine[m];
+        const bands = data[m][line];
+        let distances = [];
+        if(selRange && m !== selMfr){
+          distances = bands.map(([,r]) => {
+            const pr = wmParseRange(r);
+            if(!pr) return { overlap:false, dist:Infinity };
+            const overlap = selRange.min <= pr.max && pr.min <= selRange.max;
+            const mid1 = (selRange.min+selRange.max)/2, mid2 = (pr.min+pr.max)/2;
+            return { overlap, dist: Math.abs(mid1-mid2) };
+          });
+        }
+        const anyOverlap = distances.some(d => d.overlap);
+        let minDist = Infinity;
+        if(!anyOverlap && distances.length) minDist = Math.min(...distances.map(d => d.dist));
+
+        const container = bodyEl.querySelector(`.wm-bands[data-mfr="${m}"]`);
+        container.innerHTML = bands.map(([label, r], idx) => {
+          let cls = "";
+          if(selMfr===m && st.selectedBand.line===line && st.selectedBand.idx===idx) cls = "selected";
+          else if(selRange && m !== selMfr){
+            const d = distances[idx];
+            if(anyOverlap && d.overlap) cls = "overlap";
+            else if(!anyOverlap && d.dist === minDist) cls = "near";
+          }
+          return `<button class="wm-chip ${cls}" data-idx="${idx}"><span>${label}</span><span class="range">${r} MHz</span></button>`;
+        }).join("");
+        container.querySelectorAll(".wm-chip").forEach(btn => {
+          btn.addEventListener("click", () => {
+            st.selectedBand = { mfr: m, line, idx: Number(btn.dataset.idx) };
+            renderBands();
+          });
+        });
+      });
+    }
+
+    renderBody();
+  }
+};
+
+/* ---------- PRO AV: Speaker Wiring ---------- */
+CALCS.speakerWiring = {
+  name: "Speaker Wiring",
+  render: () => `
+    <div class="calc-card">
+      <h2>Speaker Wiring Calculator</h2>
+      <p class="desc">Total impedance and per-speaker wattage for 2-4 speakers wired in series or parallel.</p>
+      <div class="field-grid">
+        <div class="field"><label>Wiring Type</label>
+          <select id="sw_type"><option value="parallel">Parallel</option><option value="series">Series</option></select>
+        </div>
+        <div class="field"><label># of Speakers</label>
+          <select id="sw_count"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select>
+        </div>
+        <div class="field"><label>Amp Power (watts)</label><input type="number" id="sw_amp" value="100" step="1"></div>
+      </div>
+      <div class="field-grid">
+        <div class="field"><label>Speaker A (Ω)</label><input type="number" id="sw_za" value="8" step="1"></div>
+        <div class="field"><label>Speaker B (Ω)</label><input type="number" id="sw_zb" value="8" step="1"></div>
+        <div class="field"><label>Speaker C (Ω)</label><input type="number" id="sw_zc" value="8" step="1"></div>
+        <div class="field"><label>Speaker D (Ω)</label><input type="number" id="sw_zd" value="8" step="1"></div>
+      </div>
+      <div class="output-grid" id="sw_out"></div>
+    </div>
+    <hr class="divider">
+    <div class="calc-card">
+      <h2>70V Recommended Amp Wattage</h2>
+      <p class="desc">Rough amp headroom (20%) for a given 70V tap and speaker count.</p>
+      <div class="field-grid">
+        <div class="field"><label>Wattage Tap (W)</label><input type="number" id="sw70_tap" value="16" step="0.5"></div>
+        <div class="field"><label># of Speakers</label><input type="number" id="sw70_count" value="16" step="1"></div>
+      </div>
+      <div class="output-grid">
+        <div class="out-box"><div class="label">Required Wattage</div><div class="value" id="sw70_out">–</div></div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="calc-card">
+      <h2>Speaker Wire Gauge (max run, feet)</h2>
+      <p class="desc">Recommended maximum cable run before significant power loss.</p>
+      <table class="ref-table">
+        <tr><th></th><th>4Ω</th><th>6Ω</th><th>8Ω</th><th>16Ω</th></tr>
+        <tr><td>18 AWG</td><td>16</td><td>24</td><td>32</td><td>80</td></tr>
+        <tr><td>16 AWG</td><td>24</td><td>36</td><td>48</td><td>120</td></tr>
+        <tr><td>14 AWG</td><td>40</td><td>60</td><td>80</td><td>200</td></tr>
+        <tr><td>12 AWG</td><td>60</td><td>90</td><td>120</td><td>300</td></tr>
+        <tr><td>10 AWG</td><td>100</td><td>150</td><td>200</td><td>480</td></tr>
+      </table>
+    </div>
+    <hr class="divider">
+    <div class="calc-card">
+      <h2>Wire Size (max run, feet)</h2>
+      <table class="ref-table">
+        <tr><th></th><th>2Ω</th><th>4Ω</th><th>8Ω</th></tr>
+        <tr><td>22 gauge</td><td>3</td><td>6</td><td>12</td></tr>
+        <tr><td>20 gauge</td><td>5</td><td>10</td><td>20</td></tr>
+        <tr><td>18 gauge</td><td>8</td><td>16</td><td>32</td></tr>
+        <tr><td>16 gauge</td><td>12</td><td>24</td><td>48</td></tr>
+        <tr><td>14 gauge</td><td>20</td><td>40</td><td>80</td></tr>
+        <tr><td>12 gauge</td><td>30</td><td>60</td><td>120</td></tr>
+        <tr><td>10 gauge</td><td>50</td><td>100</td><td>200</td></tr>
+      </table>
+    </div>
+  `,
+  init: () => {
+    const typeSel = document.getElementById("sw_type");
+    const countSel = document.getElementById("sw_count");
+    const fieldIds = ["sw_za","sw_zb","sw_zc","sw_zd"];
+    const labels = ["A","B","C","D"];
+
+    function updateSpeakerFieldsVisibility(){
+      const count = Number(countSel.value);
+      fieldIds.forEach((id,i) => {
+        document.getElementById(id).closest(".field").style.display = (i < count) ? "" : "none";
+      });
+    }
+
+    function compute(){
+      const type = typeSel.value;
+      const count = Number(countSel.value);
+      const amp = num("sw_amp");
+      const zs = fieldIds.slice(0,count).map(id => num(id));
+      const out = document.getElementById("sw_out");
+      if(zs.some(z => z<=0) || amp<=0){
+        out.innerHTML = `<div class="out-box na"><div class="label">Total Impedance</div><div class="value">N/A</div></div>`;
+        return;
+      }
+      let totalZ;
+      if(type==="series"){ totalZ = zs.reduce((s,z) => s+z, 0); }
+      else { totalZ = 1/zs.reduce((s,z) => s+1/z, 0); }
+      let html = `<div class="out-box"><div class="label">Total Impedance</div><div class="value">${fmt(totalZ,2)} Ω</div></div>`;
+      zs.forEach((z,i) => {
+        const p = type==="series" ? amp*z/totalZ : amp*totalZ/z;
+        html += `<div class="out-box"><div class="label">Speaker ${labels[i]} Power</div><div class="value">${fmt(p,1)} W</div></div>`;
+      });
+      out.innerHTML = html;
+    }
+
+    typeSel.addEventListener("change", compute);
+    countSel.addEventListener("change", () => { updateSpeakerFieldsVisibility(); compute(); });
+    wireLive(["sw_amp","sw_za","sw_zb","sw_zc","sw_zd"], compute);
+    updateSpeakerFieldsVisibility();
+    compute();
+
+    wireLive(["sw70_tap","sw70_count"], () => {
+      const tap = num("sw70_tap"), count = num("sw70_count");
+      setText("sw70_out", fmt(tap*count*1.2,1) + " W");
+    });
+  }
+};
+
 /* ================= Sections & Navigation ================= */
 const SECTIONS = [
-  { id:"superTall", title:"Super Tall", items:["salesTaxAdjustment","discountPercentage","reverseMIM","rackSpace","discountAllocator","impedance","grossProfit","financingPayment","threeEqualPayments","sixMonthPayment","commission","unitConverter"] },
-  { id:"proAV", title:"Pro AV Toolkit", items:["impedance","wattagePerSpeaker","splAtDistance","requiredWattageSPL","wavelengthSpeed","maxSPLToSensitivity","ceilingSpeakerNeeds","basicLightingCoverage"] },
-  { id:"equallyStrong", title:"Equally Strong", items:["dbConverter","lightingCheatsheet"] }
+  { id:"favorites", title:"Favorites", items:["favorites"] },
+  { id:"superTall", title:"Super Tall", items:["salesTaxAdjustment","discountPercentage","reverseMIM","rackSpace","discountAllocator","grossProfit","financing","commission","unitConverter"] },
+  { id:"proAV", title:"Pro AV Toolkit", items:["impedance","wattagePerSpeaker","splAtDistance","requiredWattageSPL","wavelengthSpeed","maxSPLToSensitivity","ceilingSpeakerNeeds","dbConverter","speakerWiring","wirelessMics"] },
+  { id:"lighting", title:"Lighting", items:["basicLightingCoverage","lightingCheatsheet"] }
 ];
 
 let activeSection = SECTIONS[0].id;
