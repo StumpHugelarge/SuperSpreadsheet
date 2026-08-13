@@ -4,46 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Alan's Toolkit</title>
-<meta name="theme-color" content="#4f46e5">
-<meta name="description" content="Super Tall business calculators, the Pro AV Toolkit, and more.">
+<meta name="theme-color" content="#d6261c">
+<meta name="description" content="Sales Tools, Audio, Lighting and Converters calculators.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
+  @font-face{
+    font-family: "Beastformer";
+    src: url("beastformer.ttf") format("truetype");
+    font-weight: normal; font-style: normal; font-display: swap;
+  }
   :root{
-    --bg: #f4f5f9;
-    --card: #ffffff;
-    --border: #e6e8f0;
-    --text: #1a1d29;
-    --text-muted: #6b7185;
-    --accent: #4f46e5;
-    --accent-soft: #eef0fe;
-    --radius: 16px;
-    --shadow: 0 1px 2px rgba(20,20,43,0.04), 0 8px 24px rgba(20,20,43,0.06);
+    --bg: #101216;
+    --bg-2: #0b0d10;
+    --card: #1b1e25;
+    --card-2: #20242c;
+    --border: #2c313d;
+    --border-strong: #3a4152;
+    --text: #e8eaed;
+    --text-muted: #8a90a0;
+    --accent: #d6261c;
+    --accent-hover: #b31f16;
+    --accent-2: #2c74c9;
+    --accent-soft: #16233a;
+    --radius: 6px;
+    --shadow: 0 0 0 1px rgba(44,116,201,0.12), 0 10px 26px rgba(0,0,0,0.45);
+    --font-display: "Beastformer", "Arial Narrow", sans-serif;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: var(--bg);
+    background-image: linear-gradient(160deg, rgba(44,116,201,0.06) 0%, transparent 40%), linear-gradient(-20deg, rgba(214,38,28,0.05) 0%, transparent 35%);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
     padding: 20px 16px 48px;
   }
   .wrap{ max-width: 1100px; margin: 0 auto; }
   header.app-header{ text-align:center; margin-bottom: 20px; }
-  header.app-header h1{ font-size: 1.5rem; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  header.app-header h1{
+    font-family: var(--font-display); font-size: 2rem; font-weight: normal; margin: 0 0 6px;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--text);
+    text-shadow: 2px 2px 0 var(--accent), -1px -1px 0 var(--accent-2);
+  }
   header.app-header p{ color: var(--text-muted); margin: 0; font-size: 0.9rem; }
 
   .section-tabs{
     display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom: 18px;
   }
   .section-tabs button{
-    font-family: inherit; font-size: 0.9rem; font-weight: 700;
-    padding: 10px 18px; border-radius: 999px; border: 1px solid var(--border);
+    font-family: var(--font-display); font-size: 0.85rem; font-weight: normal; letter-spacing:0.04em; text-transform:uppercase;
+    padding: 10px 20px; border-radius: 0; clip-path: polygon(10px 0,100% 0,100% 100%,0 100%,0 10px);
+    border: 1px solid var(--border-strong);
     background: var(--card); color: var(--text-muted); cursor: pointer;
   }
-  .section-tabs button.active{ background: var(--accent); color: #fff; border-color: var(--accent); }
+  .section-tabs button.active{
+    background: linear-gradient(135deg,var(--accent),var(--accent-hover)); color: #fff; border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(214,38,28,0.45);
+  }
 
   .layout{ display:grid; grid-template-columns: 240px 1fr; gap: 20px; align-items:start; }
   @media (max-width: 780px){ .layout{ grid-template-columns: 1fr; } }
@@ -54,18 +74,18 @@
   }
   .sidebar button{
     text-align:left; font-family:inherit; font-size:0.85rem; font-weight:600;
-    padding: 10px 12px; border-radius: 10px; border:none; background:transparent;
+    padding: 10px 12px; border-radius: 4px; border:none; border-left:3px solid transparent; background:transparent;
     color: var(--text); cursor:pointer;
   }
-  .sidebar button.active{ background: var(--accent-soft); color: var(--accent); }
-  .sidebar button:hover:not(.active){ background:#f6f7fb; }
+  .sidebar button.active{ background: var(--accent-soft); color: #6ea6e8; border-left-color: var(--accent); }
+  .sidebar button:hover:not(.active){ background:var(--card-2); }
 
   .main-panel{ display:flex; flex-direction:column; gap:16px; }
   .calc-card{
-    background: var(--card); border:1px solid var(--border); border-radius: var(--radius);
+    background: var(--card); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius: var(--radius);
     box-shadow: var(--shadow); padding: 22px;
   }
-  .calc-card h2{ font-size:1.1rem; margin:0 0 6px; font-weight:700; }
+  .calc-card h2{ font-family: var(--font-display); font-size:1.2rem; margin:0 0 8px; font-weight:normal; letter-spacing:0.03em; text-transform:uppercase; }
   .calc-card .desc{ font-size:0.82rem; color: var(--text-muted); margin: 0 0 16px; line-height:1.45; }
   .calc-card .credit{ font-size:0.72rem; color: var(--text-muted); font-style:italic; margin: -10px 0 16px; }
 
@@ -73,17 +93,17 @@
   .field{ display:flex; flex-direction:column; gap:5px; }
   .field label{ font-size:0.72rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.03em; }
   select, input[type="number"], input[type="text"]{
-    font-family:inherit; font-size:0.92rem; padding:8px 10px; border-radius:9px;
-    border:1px solid var(--border); background:#fbfbfd; color:var(--text); width:100%;
+    font-family:inherit; font-size:0.92rem; padding:8px 10px; border-radius:4px;
+    border:1px solid var(--border-strong); background:var(--card-2); color:var(--text); width:100%;
   }
-  select:focus, input:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  select:focus, input:focus{ outline:2px solid var(--accent-2); outline-offset:1px; }
 
   .output-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap:10px; }
   .out-box{
-    background: var(--accent-soft); border-radius:12px; padding:12px 14px;
+    background: var(--accent-soft); border:1px solid rgba(44,116,201,0.35); border-radius:4px; padding:12px 14px;
   }
-  .out-box .label{ font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; color:#4338ca; margin-bottom:4px; }
-  .out-box .value{ font-size:1.15rem; font-weight:800; color:#3730a3; }
+  .out-box .label{ font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; color:#6ea6e8; margin-bottom:4px; }
+  .out-box .value{ font-size:1.15rem; font-weight:800; color:var(--text); }
   .out-box.na .value{ color: var(--text-muted); font-weight:700; font-size:0.95rem; }
 
   .divider{ border:none; border-top:1px dashed var(--border); margin: 18px 0; }
@@ -92,7 +112,7 @@
   .pill-tabs{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
   .pill-tabs button{
     font-family:inherit; font-size:0.75rem; font-weight:700; padding:7px 14px;
-    border-radius:999px; border:1px solid var(--border); background:#fbfbfd; color:var(--text-muted); cursor:pointer;
+    border-radius:999px; border:1px solid var(--border-strong); background:var(--card-2); color:var(--text-muted); cursor:pointer;
   }
   .pill-tabs button.active{ background: var(--accent); color:#fff; border-color:var(--accent); }
 
@@ -102,34 +122,37 @@
   footer{ text-align:center; color:var(--text-muted); font-size:0.75rem; margin-top:28px; }
   table.ref-table{ width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:8px; }
   table.ref-table th, table.ref-table td{ text-align:left; padding:5px 8px; border-bottom:1px solid var(--border); }
-  table.ref-table th{ color:var(--text-muted); font-weight:700; font-size:0.7rem; text-transform:uppercase; }
+  table.ref-table th{ color:#6ea6e8; font-weight:700; font-size:0.7rem; text-transform:uppercase; }
 
   .favorites-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; align-items:start; }
   @media (max-width: 780px){ .favorites-grid{ grid-template-columns: 1fr; } }
+  .favorites-grid .out-box{ padding:8px 10px; }
+  .favorites-grid .out-box .label{ font-size:0.65rem; margin-bottom:2px; }
+  .favorites-grid .out-box .value{ font-size:0.92rem; }
 
   .wm-columns{ display:grid; grid-template-columns: repeat(3,1fr); gap:12px; }
   @media (max-width: 780px){ .wm-columns{ grid-template-columns: 1fr; } }
-  .wm-col{ background:#fbfbfd; border:1px solid var(--border); border-radius:12px; padding:12px; }
-  .wm-mfr-name{ font-size:0.8rem; font-weight:700; margin-bottom:8px; }
+  .wm-col{ background:var(--card-2); border:1px solid var(--border-strong); border-radius:6px; padding:12px; }
+  .wm-mfr-name{ font-family: var(--font-display); font-size:0.85rem; letter-spacing:0.03em; text-transform:uppercase; margin-bottom:8px; }
   .wm-col select{ margin-bottom:8px; }
   .wm-bands{ display:flex; flex-direction:column; gap:6px; }
   .wm-chip{ display:flex; justify-content:space-between; align-items:center; gap:8px; width:100%; text-align:left;
-    font-family:inherit; font-size:0.78rem; font-weight:600; padding:7px 10px; border-radius:8px;
-    border:1px solid var(--border); background:#fff; color:var(--text); cursor:pointer; }
+    font-family:inherit; font-size:0.78rem; font-weight:600; padding:7px 10px; border-radius:4px;
+    border:1px solid var(--border-strong); background:var(--card); color:var(--text); cursor:pointer; }
   .wm-chip .range{ font-weight:700; color:var(--text-muted); font-size:0.72rem; }
   .wm-chip.selected{ background:var(--accent); border-color:var(--accent); color:#fff; }
-  .wm-chip.selected .range{ color:#e5e4ff; }
-  .wm-chip.overlap{ background:#e8f7ee; border-color:#3fb673; color:#1d7a4c; }
-  .wm-chip.overlap .range{ color:#1d7a4c; }
-  .wm-chip.near{ background:#fff3e0; border-color:#f0ad4e; color:#9a6317; }
-  .wm-chip.near .range{ color:#9a6317; }
+  .wm-chip.selected .range{ color:#ffd8d5; }
+  .wm-chip.overlap{ background:#123524; border-color:#2fa062; color:#7fe3ab; }
+  .wm-chip.overlap .range{ color:#7fe3ab; }
+  .wm-chip.near{ background:#3a2a0c; border-color:#c78a1f; color:#f0c675; }
+  .wm-chip.near .range{ color:#f0c675; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="app-header">
     <h1>Alan's Toolkit</h1>
-    <p>Super Tall business calculators, the Pro AV Toolkit, and a few equally strong extras.</p>
+    <p>Sales Tools, Audio, Lighting and Converters — robots in disguise, calculators in the open.</p>
   </header>
 
   <div class="section-tabs" id="sectionTabs"></div>
@@ -139,7 +162,7 @@
     <div class="main-panel" id="mainPanel"></div>
   </div>
 
-  <footer>Alan's Toolkit — built from the Super Spreadsheet. dB Level Converter originally created by Murat Böyük Pilavci (stardustmedia).</footer>
+  <footer>Alan's Toolkit — built from the Super Spreadsheet. dB Level Converter originally created by Murat Böyük Pilavci (stardustmedia). Beastformer typeface used for headers.</footer>
 </div>
 
 <script>
@@ -1064,8 +1087,6 @@ CALCS.lightingCheatsheet = {
     { id:"luxAtDistance", label:"Lux at Distance" },
     { id:"distanceTri", label:"Distance" },
     { id:"gobo", label:"Gobo Scaling" },
-    { id:"splAtten", label:"SPL Attenuation" },
-    { id:"wva", label:"Watts/Volts/Amps" },
     { id:"lumensLux", label:"Lumens to Lux" }
   ],
   render: () => `
@@ -1183,47 +1204,6 @@ CALCS.lightingCheatsheet = {
           setText("lc_go_new", fmt(pattern*(newproj/oldproj),3)+" in");
         })
       },
-      splAtten: {
-        html: `
-          <div class="field-grid">
-            <div class="field"><label>Spec Distance</label><input type="number" id="lc_sa_spec" value="2" step="0.1"></div>
-            <div class="field"><label>Actual Distance</label><input type="number" id="lc_sa_actual" value="120" step="1"></div>
-            <div class="field"><label>SPL at Spec Distance (dB)</label><input type="number" id="lc_sa_spl" value="132" step="1"></div>
-          </div>
-          <div class="output-grid">
-            <div class="out-box"><div class="label">Attenuation</div><div class="value" id="lc_sa_atten">–</div></div>
-            <div class="out-box"><div class="label">Actual SPL</div><div class="value" id="lc_sa_actualspl">–</div></div>
-          </div>
-        `,
-        wire: () => wireLive(["lc_sa_spec","lc_sa_actual","lc_sa_spl"], () => {
-          const spec = num("lc_sa_spec"), actual = num("lc_sa_actual"), spl = num("lc_sa_spl");
-          if(spec<=0||actual<=0){ setText("lc_sa_atten","N/A"); setText("lc_sa_actualspl","N/A"); return; }
-          const atten = 20*log10(spec/actual);
-          setText("lc_sa_atten", fmt(atten,2)+" dB");
-          setText("lc_sa_actualspl", fmt(spl+atten,2)+" dB");
-        })
-      },
-      wva: {
-        html: `
-          <p class="desc">Enter any two of Watts / Volts / Amps (leave the unknown at 0).</p>
-          <div class="field-grid">
-            <div class="field"><label>Watts</label><input type="number" id="lc_wv_w" value="0" step="1"></div>
-            <div class="field"><label>Volts</label><input type="number" id="lc_wv_v" value="120" step="1"></div>
-            <div class="field"><label>Amps</label><input type="number" id="lc_wv_a" value="20" step="0.1"></div>
-          </div>
-          <div class="output-grid">
-            <div class="out-box"><div class="label">Watts (Volts × Amps)</div><div class="value" id="lc_wv_out1">–</div></div>
-            <div class="out-box"><div class="label">Volts (Watts ÷ Amps)</div><div class="value" id="lc_wv_out2">–</div></div>
-            <div class="out-box"><div class="label">Amps (Watts ÷ Volts)</div><div class="value" id="lc_wv_out3">–</div></div>
-          </div>
-        `,
-        wire: () => wireLive(["lc_wv_w","lc_wv_v","lc_wv_a"], () => {
-          const w = num("lc_wv_w"), v = num("lc_wv_v"), a = num("lc_wv_a");
-          setText("lc_wv_out1", (v>0&&a>0) ? fmt(v*a,2)+" W" : "N/A");
-          setText("lc_wv_out2", (w>0&&a>0) ? fmt(w/a,2)+" V" : "N/A");
-          setText("lc_wv_out3", (w>0&&v>0) ? fmt(w/v,2)+" A" : "N/A");
-        })
-      },
       lumensLux: {
         html: `
           <div class="field-grid">
@@ -1254,6 +1234,64 @@ CALCS.lightingCheatsheet = {
       bodies[active].wire();
     }
     renderTab();
+  }
+};
+
+/* ---------- CONVERTERS: Watts/Volts/Amps ---------- */
+CALCS.wattsVoltsAmps = {
+  name: "Watts/Volts/Amps",
+  render: () => `
+    <div class="calc-card">
+      <h2>Watts / Volts / Amps</h2>
+      <p class="desc">Enter any two of Watts / Volts / Amps (leave the unknown at 0).</p>
+      <div class="field-grid">
+        <div class="field"><label>Watts</label><input type="number" id="wva_w" value="0" step="1"></div>
+        <div class="field"><label>Volts</label><input type="number" id="wva_v" value="120" step="1"></div>
+        <div class="field"><label>Amps</label><input type="number" id="wva_a" value="20" step="0.1"></div>
+      </div>
+      <div class="output-grid">
+        <div class="out-box"><div class="label">Watts (Volts × Amps)</div><div class="value" id="wva_out1">–</div></div>
+        <div class="out-box"><div class="label">Volts (Watts ÷ Amps)</div><div class="value" id="wva_out2">–</div></div>
+        <div class="out-box"><div class="label">Amps (Watts ÷ Volts)</div><div class="value" id="wva_out3">–</div></div>
+      </div>
+    </div>
+  `,
+  init: () => {
+    wireLive(["wva_w","wva_v","wva_a"], () => {
+      const w = num("wva_w"), v = num("wva_v"), a = num("wva_a");
+      setText("wva_out1", (v>0&&a>0) ? fmt(v*a,2)+" W" : "N/A");
+      setText("wva_out2", (w>0&&a>0) ? fmt(w/a,2)+" V" : "N/A");
+      setText("wva_out3", (w>0&&v>0) ? fmt(w/v,2)+" A" : "N/A");
+    });
+  }
+};
+
+/* ---------- AUDIO: SPL Attenuation ---------- */
+CALCS.splAttenuation = {
+  name: "SPL Attenuation",
+  render: () => `
+    <div class="calc-card">
+      <h2>SPL Attenuation</h2>
+      <p class="desc">SPL drop-off between a spec distance and an actual distance.</p>
+      <div class="field-grid">
+        <div class="field"><label>Spec Distance</label><input type="number" id="spa_spec" value="2" step="0.1"></div>
+        <div class="field"><label>Actual Distance</label><input type="number" id="spa_actual" value="120" step="1"></div>
+        <div class="field"><label>SPL at Spec Distance (dB)</label><input type="number" id="spa_spl" value="132" step="1"></div>
+      </div>
+      <div class="output-grid">
+        <div class="out-box"><div class="label">Attenuation</div><div class="value" id="spa_atten">–</div></div>
+        <div class="out-box"><div class="label">Actual SPL</div><div class="value" id="spa_actualspl">–</div></div>
+      </div>
+    </div>
+  `,
+  init: () => {
+    wireLive(["spa_spec","spa_actual","spa_spl"], () => {
+      const spec = num("spa_spec"), actual = num("spa_actual"), spl = num("spa_spl");
+      if(spec<=0||actual<=0){ setText("spa_atten","N/A"); setText("spa_actualspl","N/A"); return; }
+      const atten = 20*log10(spec/actual);
+      setText("spa_atten", fmt(atten,2)+" dB");
+      setText("spa_actualspl", fmt(spl+atten,2)+" dB");
+    });
   }
 };
 
@@ -1524,9 +1562,10 @@ CALCS.speakerWiring = {
 /* ================= Sections & Navigation ================= */
 const SECTIONS = [
   { id:"favorites", title:"Favorites", items:["favorites"] },
-  { id:"superTall", title:"Super Tall", items:["salesTaxAdjustment","discountPercentage","reverseMIM","rackSpace","discountAllocator","grossProfit","financing","commission","unitConverter"] },
-  { id:"proAV", title:"Pro AV Toolkit", items:["impedance","wattagePerSpeaker","splAtDistance","requiredWattageSPL","wavelengthSpeed","maxSPLToSensitivity","ceilingSpeakerNeeds","dbConverter","speakerWiring","wirelessMics"] },
-  { id:"lighting", title:"Lighting", items:["basicLightingCoverage","lightingCheatsheet"] }
+  { id:"salesTools", title:"Sales Tools", items:["salesTaxAdjustment","discountPercentage","reverseMIM","discountAllocator","grossProfit","financing","commission"] },
+  { id:"audio", title:"Audio", items:["impedance","wattagePerSpeaker","splAtDistance","requiredWattageSPL","wavelengthSpeed","maxSPLToSensitivity","ceilingSpeakerNeeds","speakerWiring","wirelessMics","splAttenuation"] },
+  { id:"lighting", title:"Lighting", items:["basicLightingCoverage","lightingCheatsheet"] },
+  { id:"converters", title:"Converters", items:["rackSpace","unitConverter","dbConverter","wattsVoltsAmps"] }
 ];
 
 let activeSection = SECTIONS[0].id;

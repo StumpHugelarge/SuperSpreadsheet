@@ -1,12 +1,12 @@
 {
   "name": "Alan's Toolkit",
   "short_name": "Alan's Toolkit",
-  "description": "Super Tall business calculators, the Pro AV Toolkit, and a few equally strong extras.",
+  "description": "Sales Tools, Audio, Lighting and Converters calculators.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f5f9",
-  "theme_color": "#4f46e5",
+  "background_color": "#101216",
+  "theme_color": "#d6261c",
   "orientation": "portrait-primary",
   "icons": [
     {

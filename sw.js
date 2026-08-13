@@ -1,10 +1,11 @@
-const CACHE_NAME = "toolkit-cache-v1";
+const CACHE_NAME = "toolkit-cache-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./beastformer.ttf"
 ];
 
 self.addEventListener("install", (event) => {
