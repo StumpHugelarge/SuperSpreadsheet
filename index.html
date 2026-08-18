@@ -9,41 +9,80 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem("toolkitTheme");
+    document.documentElement.setAttribute("data-theme", t === "light" ? "light" : "dark");
+  }catch(e){
+    document.documentElement.setAttribute("data-theme","dark");
+  }
+})();
+</script>
 <style>
   @font-face{
     font-family: "Beastformer";
     src: url("beastformer.ttf") format("truetype");
     font-weight: normal; font-style: normal; font-display: swap;
   }
-  :root{
-    --bg: #101216;
-    --bg-2: #0b0d10;
+  :root, html[data-theme="dark"]{
+    --bg: #0c0d10;
+    --bg-2: #08090b;
     --card: #1b1e25;
-    --card-2: #20242c;
-    --border: #2c313d;
-    --border-strong: #3a4152;
-    --text: #e8eaed;
-    --text-muted: #8a90a0;
+    --card-2: #262b34;
+    --border: #3a4152;
+    --border-strong: #565f70;
+    --text: #ffffff;
+    --text-muted: #aab1c0;
+    --accent: #e8332a;
+    --accent-hover: #c22a22;
+    --accent-2: #4a9eef;
+    --accent-soft: #123a63;
+    --out-border: #4a9eef;
+    --label-accent: #8fc5ff;
+    --radius: 6px;
+    --shadow: 0 0 0 1px rgba(74,158,239,0.15), 0 10px 26px rgba(0,0,0,0.5);
+    --font-display: "Beastformer", "Arial Narrow", sans-serif;
+    color-scheme: dark;
+  }
+  html[data-theme="light"]{
+    --bg: #e4e7ec;
+    --bg-2: #d7dbe2;
+    --card: #ffffff;
+    --card-2: #f2f3f6;
+    --border: #c3c8d1;
+    --border-strong: #aab1bd;
+    --text: #1a1d24;
+    --text-muted: #5b6172;
     --accent: #d6261c;
     --accent-hover: #b31f16;
-    --accent-2: #2c74c9;
-    --accent-soft: #16233a;
-    --radius: 6px;
-    --shadow: 0 0 0 1px rgba(44,116,201,0.12), 0 10px 26px rgba(0,0,0,0.45);
-    --font-display: "Beastformer", "Arial Narrow", sans-serif;
+    --accent-2: #1d55a3;
+    --accent-soft: #eaf0fb;
+    --out-border: #b7cbef;
+    --label-accent: #1d55a3;
+    --shadow: 0 1px 2px rgba(20,20,43,0.06), 0 8px 24px rgba(20,20,43,0.08);
+    color-scheme: light;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: var(--bg);
-    background-image: linear-gradient(160deg, rgba(44,116,201,0.06) 0%, transparent 40%), linear-gradient(-20deg, rgba(214,38,28,0.05) 0%, transparent 35%);
+    background-image: linear-gradient(160deg, rgba(74,158,239,0.06) 0%, transparent 40%), linear-gradient(-20deg, rgba(232,51,42,0.05) 0%, transparent 35%);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
     padding: 20px 16px 48px;
   }
   .wrap{ max-width: 1100px; margin: 0 auto; }
-  header.app-header{ text-align:center; margin-bottom: 20px; }
+  header.app-header{ text-align:center; margin-bottom: 20px; position:relative; }
+  .theme-toggle{
+    font-family:inherit; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em;
+    padding:7px 14px; border-radius:999px; border:1px solid var(--border-strong);
+    background:var(--card); color:var(--text-muted); cursor:pointer;
+    position:absolute; top:0; right:0;
+  }
+  .theme-toggle:hover{ border-color:var(--accent-2); color:var(--text); }
+  @media (max-width:560px){ .theme-toggle{ position:static; margin:10px auto 0; display:block; } }
   header.app-header h1{
     font-family: var(--font-display); font-size: 2rem; font-weight: normal; margin: 0 0 6px;
     letter-spacing: 0.04em; text-transform: uppercase; color: var(--text);
@@ -77,7 +116,7 @@
     padding: 10px 12px; border-radius: 4px; border:none; border-left:3px solid transparent; background:transparent;
     color: var(--text); cursor:pointer;
   }
-  .sidebar button.active{ background: var(--accent-soft); color: #6ea6e8; border-left-color: var(--accent); }
+  .sidebar button.active{ background: var(--accent-soft); color: var(--label-accent); border-left-color: var(--accent); }
   .sidebar button:hover:not(.active){ background:var(--card-2); }
 
   .main-panel{ display:flex; flex-direction:column; gap:16px; }
@@ -98,11 +137,20 @@
   }
   select:focus, input:focus{ outline:2px solid var(--accent-2); outline-offset:1px; }
 
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button{
+    opacity: 1;
+  }
+  html[data-theme="dark"] input[type="number"]::-webkit-inner-spin-button,
+  html[data-theme="dark"] input[type="number"]::-webkit-outer-spin-button{
+    filter: invert(1) brightness(1.7);
+  }
+
   .output-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap:10px; }
   .out-box{
-    background: var(--accent-soft); border:1px solid rgba(44,116,201,0.35); border-radius:4px; padding:12px 14px;
+    background: var(--accent-soft); border:1px solid var(--out-border); border-radius:4px; padding:12px 14px;
   }
-  .out-box .label{ font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; color:#6ea6e8; margin-bottom:4px; }
+  .out-box .label{ font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; color:var(--label-accent); margin-bottom:4px; }
   .out-box .value{ font-size:1.15rem; font-weight:800; color:var(--text); }
   .out-box.na .value{ color: var(--text-muted); font-weight:700; font-size:0.95rem; }
 
@@ -122,7 +170,7 @@
   footer{ text-align:center; color:var(--text-muted); font-size:0.75rem; margin-top:28px; }
   table.ref-table{ width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:8px; }
   table.ref-table th, table.ref-table td{ text-align:left; padding:5px 8px; border-bottom:1px solid var(--border); }
-  table.ref-table th{ color:#6ea6e8; font-weight:700; font-size:0.7rem; text-transform:uppercase; }
+  table.ref-table th{ color:var(--label-accent); font-weight:700; font-size:0.7rem; text-transform:uppercase; }
 
   .favorites-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; align-items:start; }
   @media (max-width: 780px){ .favorites-grid{ grid-template-columns: 1fr; } }
@@ -151,6 +199,7 @@
 <body>
 <div class="wrap">
   <header class="app-header">
+    <button class="theme-toggle" id="themeToggle" type="button"></button>
     <h1>Alan's Toolkit</h1>
     <p>Sales Tools, Audio, Lighting and Converters — robots in disguise, calculators in the open.</p>
   </header>
@@ -1607,6 +1656,22 @@ function renderAll(){
   renderMain();
 }
 renderAll();
+
+/* ---------- Theme toggle ---------- */
+(function(){
+  const btn = document.getElementById("themeToggle");
+  function syncLabel(){
+    const t = document.documentElement.getAttribute("data-theme");
+    btn.textContent = t === "dark" ? "Light Mode" : "Dark Mode";
+  }
+  btn.addEventListener("click", () => {
+    const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try{ localStorage.setItem("toolkitTheme", next); }catch(e){}
+    syncLabel();
+  });
+  syncLabel();
+})();
 
 /* ---------- PWA service worker registration ---------- */
 if("serviceWorker" in navigator){
