@@ -86,7 +86,6 @@
   header.app-header h1{
     font-family: var(--font-display); font-size: 2rem; font-weight: normal; margin: 0 0 6px;
     letter-spacing: 0.04em; text-transform: uppercase; color: var(--text);
-    text-shadow: 2px 2px 0 var(--accent), -1px -1px 0 var(--accent-2);
   }
   header.app-header p{ color: var(--text-muted); margin: 0; font-size: 0.9rem; }
 
@@ -178,6 +177,11 @@
   .favorites-grid .out-box .label{ font-size:0.65rem; margin-bottom:2px; }
   .favorites-grid .out-box .value{ font-size:0.92rem; }
 
+  .pricing-tools .out-box{ padding:8px 10px; }
+  .pricing-tools .out-box .label{ font-size:0.65rem; margin-bottom:2px; }
+  .pricing-tools .out-box .value{ font-size:0.92rem; }
+  .layout.full-width{ grid-template-columns: 1fr; }
+
   .wm-columns{ display:grid; grid-template-columns: repeat(3,1fr); gap:12px; }
   @media (max-width: 780px){ .wm-columns{ grid-template-columns: 1fr; } }
   .wm-col{ background:var(--card-2); border:1px solid var(--border-strong); border-radius:6px; padding:12px; }
@@ -201,7 +205,7 @@
   <header class="app-header">
     <button class="theme-toggle" id="themeToggle" type="button"></button>
     <h1>Alan's Toolkit</h1>
-    <p>Sales Tools, Audio, Lighting and Converters — Efficiency in disguise.</p>
+    <p>Sales Tools, Audio, Lighting and Converters — Efficiency in Disguise.</p>
   </header>
 
   <div class="section-tabs" id="sectionTabs"></div>
@@ -903,6 +907,28 @@ CALCS.grossProfit = {
       setText("gp_sellAtNoCard", money(sellAtNoCard));
       setText("gp_discount", money(discount));
     });
+  }
+};
+
+/* ---------- SALES TOOLS: grouped pricing/discount calculators (alphabetical) ---------- */
+CALCS.pricingTools = {
+  name: "Pricing Tools",
+  render: () => `
+    <div class="pricing-tools">
+      ${CALCS.discountPercentage.render()}
+      <hr class="divider">
+      ${CALCS.grossProfit.render()}
+      <hr class="divider">
+      ${CALCS.discountAllocator.render()}
+      <hr class="divider">
+      ${CALCS.reverseMIM.render()}
+    </div>
+  `,
+  init: () => {
+    CALCS.discountPercentage.init();
+    CALCS.grossProfit.init();
+    CALCS.discountAllocator.init();
+    CALCS.reverseMIM.init();
   }
 };
 
@@ -1611,8 +1637,8 @@ CALCS.speakerWiring = {
 /* ================= Sections & Navigation ================= */
 const SECTIONS = [
   { id:"favorites", title:"Favorites", items:["favorites"] },
-  { id:"salesTools", title:"Sales Tools", items:["salesTaxAdjustment","discountPercentage","reverseMIM","discountAllocator","grossProfit","financing","commission"] },
-  { id:"audio", title:"Audio", items:["impedance","wattagePerSpeaker","splAtDistance","requiredWattageSPL","wavelengthSpeed","maxSPLToSensitivity","ceilingSpeakerNeeds","speakerWiring","wirelessMics","splAttenuation"] },
+  { id:"salesTools", title:"Sales Tools", items:["salesTaxAdjustment","pricingTools","financing","commission"] },
+  { id:"audio", title:"Audio", items:["ceilingSpeakerNeeds","maxSPLToSensitivity","impedance","requiredWattageSPL","splAttenuation","splAtDistance","speakerWiring","wattagePerSpeaker","wavelengthSpeed","wirelessMics"] },
   { id:"lighting", title:"Lighting", items:["basicLightingCoverage","lightingCheatsheet"] },
   { id:"converters", title:"Converters", items:["rackSpace","unitConverter","dbConverter","wattsVoltsAmps"] }
 ];
@@ -1633,7 +1659,14 @@ function renderSectionTabs(){
 }
 function renderSidebar(){
   const el = document.getElementById("sidebar");
+  const layout = document.querySelector(".layout");
   const section = SECTIONS.find(s => s.id===activeSection);
+  if(section.items.length <= 1){
+    el.innerHTML = "";
+    layout.classList.add("full-width");
+    return;
+  }
+  layout.classList.remove("full-width");
   el.innerHTML = section.items.map(id => `<button data-id="${id}" class="${id===activeCalc?'active':''}">${CALCS[id].name}</button>`).join("");
   el.querySelectorAll("button").forEach(btn => {
     btn.addEventListener("click", () => { activeCalc = btn.dataset.id; renderMain(); highlightSidebar(); });
